@@ -1,0 +1,88 @@
+#app {
+    height: 150px;
+
+}
+.mess-logo img {
+    height: 80px;
+}
+
+.table thead tr th {
+    width: 120px;
+    text-align: center;
+}
+
+.table tbody tr{
+    height: 50px;
+}
+
+.table tbody tr td{
+    text-align: center;
+    padding: 5px;
+    line-height: 50px;
+}
+
+.table tbody tr td:nth-child(1){
+    text-align: left;
+}
+
+.mess-edit{
+    margin-left: 10px;
+}
+
+.mess-img {
+    height: 50px;
+}
+
+.mess-title {
+    margin-left: 10px;
+}
+
+.mess-pagebtn {
+    cursor: pointer;
+}
+
+.text {
+    height: 50px;
+    overflow: hidden;
+}
+
+.mess-text {
+    height: 200px;
+}
+
+.mess-add-form {
+    height: 300px;
+}
+
+.mess-add-form-label {
+    width: 90px;
+}
+
+.mess-new {
+    position: absolute;
+    left : 10%;
+}
+
+.mess-new img {
+    height: 30px;
+}
+
+.emo-img {
+    height : 30px;
+}
+
+.mess-time {
+    color: grey;
+    font-size: small;
+}
+
+.mess-img-card {
+    width: 100px;
+    height: 100px;
+}
+
+.mess-banner img{
+    /* height: 100px; */
+    width: 100%;
+    height: 100px;
+}

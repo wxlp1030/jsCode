@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+        crossorigin="anonymous">
+    <style type="text/css">
+        /* 公用样式 */
+        .wrapper1,
+        .wrapper2,
+        .wrapper3 {
+            display: flex;
+            color: white;
+            font-size: 24px;
+            width: 400px;
+            height: 100px;
+            line-height: 50px;
+            border: 1px solid gray;
+            text-align: center;
+        }
+
+        .wrapper1 div,
+        .wrapper2 div,
+        .wrapper3 div {
+            height: 50%;
+            width: 50%;
+        }
+
+        .red {
+            background: red;
+        }
+
+        .green {
+            background: green;
+        }
+
+        .blue {
+            background: blue;
+        }
+
+        /* 弹性盒子样式 */
+        .wrapper1 {
+            flex-wrap: nowrap;
+        }
+
+        .wrapper2 {
+            flex-wrap: wrap;
+        }
+
+        .wrapper3 {
+            flex-wrap: wrap-reverse;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="box">
+    </div>
+    <!-- <h3>1、flex-wrap:nowrap（默认值）</h3>
+    <div class="wrapper1">
+        <div class="red">1</div>
+        <div class="green">2</div>
+        <div class="blue">3</div>
+    </div> -->
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-2.1.4.min.js"></script>
+    <script src="index.js"></script>
+    <script>
+        view("http://120.55.89.160/index.php/feed/", 1);
+    </script>
+</body>
+
+</html>

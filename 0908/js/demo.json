@@ -1,0 +1,182 @@
+{
+    "msg": "",
+    "code": 0,
+    "data": [
+        {
+            "searchValue": null,
+            "createBy": null,
+            "createTime": null,
+            "updateBy": null,
+            "updateTime": null,
+            "remark": null,
+            "params": {},
+            "id": 1,
+            "messageid": 1,
+            "userid": 2,
+            "parentid": null,
+            "text": "测试",
+            "ip": "0:0:0:0:0:0:0:1",
+            "emotion": null,
+            "children": [
+                {
+                    "searchValue": null,
+                    "createBy": null,
+                    "createTime": null,
+                    "updateBy": null,
+                    "updateTime": null,
+                    "remark": null,
+                    "params": {},
+                    "id": 4,
+                    "messageid": 1,
+                    "userid": 1,
+                    "parentid": 1,
+                    "text": "<p>你测试啥呢？</p>",
+                    "ip": "",
+                    "emotion": null,
+                    "children": [
+                        {
+                            "searchValue": null,
+                            "createBy": null,
+                            "createTime": null,
+                            "updateBy": null,
+                            "updateTime": null,
+                            "remark": null,
+                            "params": {},
+                            "id": 5,
+                            "messageid": 1,
+                            "userid": 2,
+                            "parentid": 4,
+                            "text": "<p>你管得着么？一边呆着去！</p>",
+                            "ip": "",
+                            "emotion": null,
+                            "children": [
+                                {
+                                    "searchValue": null,
+                                    "createBy": null,
+                                    "createTime": null,
+                                    "updateBy": null,
+                                    "updateTime": null,
+                                    "remark": null,
+                                    "params": {},
+                                    "id": 8,
+                                    "messageid": 1,
+                                    "userid": 1,
+                                    "parentid": 5,
+                                    "text": "hhhhhh",
+                                    "ip": null,
+                                    "emotion": null,
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "searchValue": null,
+                            "createBy": null,
+                            "createTime": null,
+                            "updateBy": null,
+                            "updateTime": null,
+                            "remark": null,
+                            "params": {},
+                            "id": 10,
+                            "messageid": 1,
+                            "userid": 2,
+                            "parentid": 4,
+                            "text": "<p>咋这么爱管闲事儿呢！</p>",
+                            "ip": "",
+                            "emotion": null,
+                            "children": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "searchValue": null,
+            "createBy": null,
+            "createTime": null,
+            "updateBy": null,
+            "updateTime": null,
+            "remark": null,
+            "params": {},
+            "id": 2,
+            "messageid": 1,
+            "userid": 1,
+            "parentid": null,
+            "text": "<p>这条留言真不错呀！</p>",
+            "ip": "",
+            "emotion": null,
+            "children": [
+                {
+                    "searchValue": null,
+                    "createBy": null,
+                    "createTime": null,
+                    "updateBy": null,
+                    "updateTime": null,
+                    "remark": null,
+                    "params": {},
+                    "id": 9,
+                    "messageid": 1,
+                    "userid": 2,
+                    "parentid": 2,
+                    "text": "<p>我也觉得不错</p>",
+                    "ip": "",
+                    "emotion": null,
+                    "children": []
+                }
+            ]
+        },
+        {
+            "searchValue": null,
+            "createBy": null,
+            "createTime": null,
+            "updateBy": null,
+            "updateTime": null,
+            "remark": null,
+            "params": {},
+            "id": 3,
+            "messageid": 1,
+            "userid": 2,
+            "parentid": null,
+            "text": "<p>怎么写的这么好</p>",
+            "ip": "",
+            "emotion": null,
+            "children": [
+                {
+                    "searchValue": null,
+                    "createBy": null,
+                    "createTime": null,
+                    "updateBy": null,
+                    "updateTime": null,
+                    "remark": null,
+                    "params": {},
+                    "id": 6,
+                    "messageid": 1,
+                    "userid": 1,
+                    "parentid": 3,
+                    "text": "<p>哪好了？你咋看出来的？</p>",
+                    "ip": "",
+                    "emotion": null,
+                    "children": [
+                        {
+                            "searchValue": null,
+                            "createBy": null,
+                            "createTime": null,
+                            "updateBy": null,
+                            "updateTime": null,
+                            "remark": null,
+                            "params": {},
+                            "id": 7,
+                            "messageid": 1,
+                            "userid": 2,
+                            "parentid": 6,
+                            "text": "<p>我熟读四书五经，自然文采斐然！！哼哼</p>",
+                            "ip": "",
+                            "emotion": null,
+                            "children": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

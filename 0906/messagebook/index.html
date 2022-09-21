@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>开发喵留言板</title>
+    <link rel="stylesheet" href="css/mess-index.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-swipper.css">
+
+    <script src="js/vue3.js"></script>
+    <script src="js/axios.min.js"></script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js">
+    </script>
+    <script src="js/jquery-3.6.0.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-table.min.js"></script>
+    <script src="js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="js/vue-router.global.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <div class="container">
+            <div class="mess-nav row">
+                <div class="mess-logo col-sm-2">
+                    <img src="images/mess-logo.jpg" alt="">
+                    <div class="mess-add">
+                        <button class="btn btn-success" @click="to_add()" data-toggle="modal"
+                            data-target="#mess-add">新增留言</button>
+                    </div>
+                </div>
+                <div class="mess-banner col-sm-8">
+                    <mess-banner></mess-banner>
+                </div>
+
+                <div class="mess-user col-sm-1">
+                    {{login.username}},你好
+                </div>
+
+            </div>
+            <div class="mess-box row">
+                <!-- 新增留言 -->
+                <div class="modal fade" id="mess-add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                    &times;
+                                </button>
+                            </div>
+                            <div class="modal-body mess-add-form">
+                                <form action="">
+                                    <div class="form-item">
+                                        <label for="userid" class="mess-add-form-label">用户：</label>
+                                        <input type="text" readonly :value="login.userid" name="userid" disabled>
+                                    </div>
+                                    <div class="form-item">
+                                        <label for="userid" class="mess-add-form-label">留言标题：</label>
+                                        <input type="text" required v-model="formData.title" name="userid">
+                                    </div>
+                                    <div class="form-item">
+                                        <label for="userid" class="mess-add-form-label">留言板块：</label>
+                                        <select name="plate" v-model="formData.plate">
+                                            <option v-for="p in plates" :value="p">{{p}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-item">
+                                        <label for="userid" class="mess-add-form-label">表情：</label>
+                                        <span v-for="emo in emotions">
+                                            <input type="radio" name="emotion" :value="emo"
+                                                v-model="formData.emotion" />
+                                            <img class="emo-img" :src="'http://192.168.50.70:8081/images/emo/' + emo" />
+                                        </span>
+                                    </div>
+                                    <div class="form-item">
+                                        <label for="userid" class="mess-add-form-label">内容：</label>
+                                        <textarea v-model="formData.text" name="userid"></textarea>
+                                    </div>
+                                    <div class="form-item">
+                                        <label for="userid" class="mess-add-form-label">附件：</label>
+                                        <input type="file" v-model="formData.newspaper" name="userid">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal"
+                                    @click="handleClose">关闭
+                                </button>
+                                <button type="button" class="btn btn-sm btn-info" @click="to_submit('add1')">
+                                    提交
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 新增留言 结束 -->
+                <!-- 留言修改 -->
+                <div class="modal fade" id="mess-edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                    &times;
+                                </button>
+                            </div>
+                            <div class="modal-body mess-add-form">
+                                <form action="">
+                                    <div class="form-item">
+                                        <label for="userid" class="mess-add-form-label">用户：</label>
+                                        <input type="text" readonly :value="formData.userid" name="userid" disabled>
+                                    </div>
+                                    <div class="form-item">
+                                        <label for="userid" class="mess-add-form-label">留言标题：</label>
+                                        <input type="text" required v-model="formData.title" name="userid">
+                                    </div>
+                                    <div class="form-item">
+                                        <label for="userid" class="mess-add-form-label">留言板块：</label>
+                                        <select name="plate" v-model="formData.plate">
+                                            <option v-for="p in plates" :value="p">{{p}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-item">
+                                        <label for="userid" class="mess-add-form-label">表情：</label>
+                                        <span v-for="emo in emotions">
+                                            <input type="radio" name="emotion" :value="emo" v-model="formData.emotion"
+                                                :checked="emo == formData.emotion" />
+                                            <img class="emo-img" :src="'http://192.168.50.70:8081/images/emo/' + emo" />
+                                        </span>
+                                    </div>
+                                    <div class="form-item">
+                                        <label for="userid" class="mess-add-form-label">内容：</label>
+                                        <textarea v-model="formData.text" name="userid"></textarea>
+                                    </div>
+                                    <div class="form-item">
+                                        <label for="userid" class="mess-add-form-label">附件：</label>
+                                        <input type="file" v-model="formData.newspaper" name="userid">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal"
+                                    @click="handleClose">关闭
+                                </button>
+                                <button type="button" class="btn btn-sm btn-info" @click="to_submit('edit1')">
+                                    提交
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 留言修改结束 -->
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <table id="table"></table>
+    </div>
+    <script>
+        let app = Vue.createApp({
+            data() {
+                return {
+                    tableData: [],
+                    url: "http://192.168.50.70:8081/messagebook/messagebook/",
+                    current: {},
+                    login: {},
+                    now: '',
+                    formData: {
+                        userid: '',
+                        title: '',
+                        plate: '',
+                        emotion: '',
+                        text: '',
+                        newspaper: ''
+                    },
+                    plates: [],
+                    emotions: []
+                }
+            },
+            methods: {
+                getAllData() { // 获取板块以及表情
+                    axios({
+                        url: this.url + "/data",
+                        method: "get",
+                    }).then(data => {
+                        if (data.data.code == 0) {
+                            this.plates = data.data.data.plates;
+                            this.emotions = data.data.data.emotions;
+                        }
+                    })
+                },
+                getOneData(id) {
+                    axios({
+                        url: this.url + "list/" + id,
+                        method: "GET",
+                    }).then(data => {
+                        if (data.data.code == 0) {
+                            this.current = data.data.data;
+                        }
+                    })
+                },
+                to_page(id) { // 获取详细数据
+                    this.getOneData(id);
+                },
+                is_new(time) {
+                    return new Date() - new Date(time) < 60 * 60 * 1000;
+                },
+                to_add() {
+                    this.getAllData();
+                },
+                to_submit(type) {
+                    this.formData.userid = this.login.userid;
+                    axios({
+                        url: this.url + type,
+                        method: "POST",
+                        data: JSON.stringify(this.formData),
+                        headers: {
+                            'Content-Type': 'application/json;charset=UTF-8'
+                        },
+                    }).then(data => {
+                        if (data.data.code == 0) {
+                            if (type == "add1") {
+                                $("#mess-add").modal('hide');
+                            } else if (type == "edit1") {
+                                $("#mess-edit").modal('hide');
+                            }
+                            this.formData = {}
+                            this.initTable();
+                        }
+                    })
+                },
+                handleClose() {
+                    this.current = {};
+                    this.formData = {
+                        userid: '',
+                        title: '',
+                        plate: '',
+                        emotion: '',
+                        text: '',
+                        newspaper: ''
+                    }
+                },
+                emoFormatter(value) {
+                    return "<img class='mess-img' src=" +
+                        "'http://192.168.50.70:8081/images/emo/" +
+                        value +
+                        "' alt='表情'>";
+                },
+                plateFormatter(value) {
+                    switch (value) {
+                        case '抒发情绪':
+                            return '<span class="badge badge-primary">' +
+                                value + '</span>';
+                        case '吐槽':
+                            return '<span class="badge badge-secondary">' +
+                                value + '</span>';
+                        case '紧急事件':
+                            return '<span class="badge badge-danger">' +
+                                value + '</span>';
+                        case '问题反馈':
+                            return '<span class="badge badge-warning">' +
+                                value + '</span>';
+                        default:
+                            return '<span class="badge badge-dark">未知</span>'
+                    }
+                },
+                titleFormatter(value, row) {
+                    if (!value) {
+                        return "-"
+                    }
+                    if (this.is_new(row.createDatetime)) {
+                        return "<div class='mess-new'>" +
+                            " <img src='images/new.png' />" +
+                            "</div>" +
+                            "<span class='mess-title'>" +
+                            value + "</span>";
+                    } else {
+                        return "<span class='mess-title'>" +
+                            value + "</span>"
+                    }
+                },
+                operFormatter(value, row, index) {
+                    if (row.userid == this.login.userid &&
+                        this.login.role == 1 || this.login
+                        .role == 0) {
+                        const id = row.messageid
+                        return [
+                            `<button class="btn btn-info btn-sm" onclick="handleEdit(` + id +
+                            `)" data-toggle="modal"
+                                    data-target="#mess-edit">编辑</button>`,
+                            `<button class="btn btn-danger btn-sm" onclick="handleDelete(` + id +
+                            `)">删除</button>`
+                        ].join('')
+                    } else {
+                        return '<span class="badge badge-warning">无操作权限</span>';
+                    }
+                },
+                unfold(field, value, row, $element) {
+                    if (field != 6) {
+                        window.location.href = "mess-text.html"
+                        sessionStorage.setItem('messageid', row.messageid)
+                    }
+                },
+                initTable() {
+                    const _this = this;
+                    axios({
+                        url: "http://192.168.50.70:8081/messagebook/messagebook/list",
+                        method: "GET"
+                    }).then(res => {
+                        if (res.data.code == 0) {
+                            $("#table").bootstrapTable({
+                                striped: true, //隔行换色
+                                data: res.data.data,
+                                toolbar: '#toolbar', //工具按钮用哪个容器
+                                undefinedText: "-",
+                                pagination: true, //是否显示分页（*）
+                                sortable: true, //是否启用排序
+                                loadingFontSize: 13, // 自定义加载文本的字体大小
+                                queryParamsType: "limit",
+                                sidePagination: "client", //分页方式：client 客户端分页，server 服务端分页（*）
+                                pageNumber: 1, //初始化加载第一页，默认第一页
+                                pageSize: 8, //每页的记录行数（*）
+                                pageList: [4, 8, 12], //可供选择的每页的行数（*）
+                                showColumns: false, //是否显示所有的列
+                                strictSearch: true,
+                                sortName: 'createDatetime',
+                                sortOrder: 'desc',
+                                showToggle: true, //是否显示详细视图和列表视图的切换按钮
+                                uniqueId: "messageid", //每一行的唯一标识，一般为主键列
+                                cardView: false, //是否显示详细视图
+                                exportDataType: 'basic', //'basic', 'all', 'selected'.
+                                escape: true, //html转意
+                                align: "center",
+                                showColumns: true,
+                                columns: [{
+                                        title: '留言标题',
+                                        field: 'title',
+                                        align: 'center',
+                                        valign: 'middle',
+                                        sortable: true,
+                                        formatter: _this.titleFormatter,
+
+                                    },
+                                    {
+                                        title: '表情',
+                                        field: 'emotion',
+                                        align: 'center',
+                                        valign: 'middle',
+                                        formatter: _this.emoFormatter
+                                    },
+                                    {
+                                        title: '留言板块',
+                                        field: 'plate',
+                                        sortable: true,
+                                        align: 'center',
+                                        formatter: _this.plateFormatter
+                                    },
+                                    {
+                                        title: '用户',
+                                        field: 'userid',
+                                        sortable: true,
+                                        align: 'center'
+                                    },
+                                    {
+                                        title: '留言时间',
+                                        field: 'createDatetime',
+                                        align: 'center',
+                                        clickToSelect: false
+                                    },
+                                    {
+                                        title: '留言ip',
+                                        field: 'ip',
+                                        align: 'center',
+                                        clickToSelect: false
+                                    },
+                                    {
+                                        title: '操作',
+                                        align: 'center',
+                                        clickToSelect: false,
+                                        formatter: _this.operFormatter
+                                    }
+                                ],
+                                onClickCell: _this.unfold
+                            });
+                            $("#table").bootstrapTable("hideLoading");
+                        }
+                    })
+                },
+            },
+            mounted() {
+                this.login = JSON.parse(window.sessionStorage.getItem("userinfo"))
+                this.initTable();
+            },
+
+        });
+
+        app.component('mess-banner', {
+            data() {
+                return {
+                    formData: []
+                }
+            },
+            template: `
+            <div id="demo" class="carousel slide" data-ride="carousel">
+                <!-- 轮播图片 -->
+                <div class="carousel-inner">
+                    <div class="carousel-item" v-for="(b, index) in formData" :key="index"
+                        :class="[index == 0 ? 'active' : '']">
+                        <div>
+                            <a href="https://www.ycdledu.com/" target="_blank">
+                                <img :src="'http://192.168.50.70:8081' + b.link" @click="isclick(b.id)" :title="b.text" :alt="b.id">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- 左右切换按钮 -->
+                <a class="carousel-control-prev" href="#demo" data-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </a>
+                <a class="carousel-control-next" href="#demo" data-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </a>
+        
+            </div>
+            `,
+            methods: {
+                getData() {
+                    axios({
+                        method: "get",
+                        url: "http://192.168.50.70:8081/messagebook/banner/list",
+                    }).then((res) => {
+                        this.formData = res.data.rows;
+                    });
+                },
+        
+                isclick(index) {
+                    axios({
+                        method: "get",
+                        url: "http://192.168.50.70:8081/messagebook/banner/edit1/" + index
+                    }).then((res) => {
+                        // window.location.href = "https://www.ycdledu.com/";
+                    })
+                },
+            },
+            mounted() {
+                this.getData();
+            }
+        });
+        
+        const mv = app.mount('#app');
+
+        function handleEdit(id) {
+            axios({
+                url: mv.url + "list/" + id,
+                method: "GET",
+            }).then(data => {
+                if (data.data.code == 0) {
+                    console.log(data.data.data);
+                    mv.formData = data.data.data;
+                    mv.getAllData()
+                }
+            })
+        }
+
+        function handleDelete(id) {
+            axios({
+                url: mv.url + "/remove?ids=" + id,
+                method: "POST",
+            }).then(data => {
+                if (data.data.code == 0) {
+                    mv.initTable();
+                }
+            })
+        }
+    </script>
+
+</body>
+
+</html>

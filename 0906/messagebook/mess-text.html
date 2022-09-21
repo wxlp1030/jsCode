@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>留言详情</title>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/mess-index.css">
+
+    <script src="js/vue3.js"></script>
+    <script src="js/axios.min.js"></script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js">
+    </script>
+    <script src="js/jquery-3.6.0.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-table.min.js"></script>
+    <script src="js/bootstrap-table-zh-CN.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="container">
+            <div class="card">
+                <div class="card-header">
+                    {{current.title}} <span :class="badge()">{{current.plate}}</span>
+                </div>
+                <div class="card-body">
+                    <blockquote class="blockquote mb-0">
+                        <p><img class="mess-img" :src="'http://192.168.50.70:8081/images/emo/' + current.emotion"
+                                class="card-img-top" alt="..."> {{current.text ? current.text : '暂无内容'}}</p>
+                        <footer class="blockquote-footer reply-right">{{username}} <cite title="Source Title">
+                                {{current.createDatetime}}</cite>
+
+                            <a class="card-link mess-reply" @click="messReply()" data-toggle="collapse"
+                                data-target="#collapse">回复</a>
+                        </footer>
+                    </blockquote>
+                </div>
+            </div>
+
+            <div class="collapse" id="collapse">
+                <div class="card card-body">
+                    <div class="form-item">
+                        <label for="userid" class="mess-add-form-label">内容：</label>
+                        <input type="text" required v-model="replyData.text" name="userid">
+                    </div>
+                    <div class="form-item">
+                        <label for="userid" class="mess-add-form-label">表情：</label>
+                        <span v-for="emo in emotions">
+                            <input type="radio" name="emotion" :value="emo" v-model="replyData.emotion" />
+                            <img class="emo-img" :src="'http://192.168.50.70:8081/images/emo/' + emo" />
+                        </span>
+                    </div>
+                </div>
+                <div class="card-footer"><button type="button" class="btn btn-sm btn-default" data-dismiss="collapse"
+                        @click="handleClose()">关闭
+                    </button>
+                    <button type="button" class="btn btn-sm btn-info" @click="to_submit()">
+                        提交
+                    </button></div>
+            </div>
+
+
+            <div class="card" v-for="reply in replies.data">
+                <div class="card-body">
+                    {{reply.text}} <img class="mess-img" :src="'http://192.168.50.70:8081/images/emo/' + reply.emotion">
+                </div>
+                <footer class="blockquote-footer reply-right">{{reply.username}} <cite title="Source Title">
+                        {{reply.createdatetime}}</cite>
+                    <a class="card-link mess-reply" @click="messReply(reply.id)" data-toggle="collapse"
+                        :data-target="'#collapse' + reply.id">回复</a>
+                </footer>
+
+                <div class="card" v-for="re in reply.children">
+                    <div class="reply-text">
+                        <span class="badge badge-success">{{re.username}}</span>
+                        回复
+                        <span class="badge badge-success">{{re.pname}}</span>
+                        ：
+                        {{re.text}} <img class="mess-img-sm"
+                            :src="'http://192.168.50.70:8081/images/emo/' + re.emotion">
+
+                        <footer class="blockquote-footer reply-right">{{re.username}} <cite title="Source Title">
+                                {{re.createdatetime}}</cite>
+                            <a class="card-link mess-reply" @click="messReply(re.id)" data-toggle="collapse"
+                                :data-target="'#collapse' + re.id">回复</a>
+                        </footer>
+                    </div>
+                    <div class="collapse" :id="'collapse' + re.id">
+                        <div class="card card-body">
+                            <div class="form-item">
+                                <label for="userid" class="mess-add-form-label">内容：</label>
+                                <input type="text" required v-model="replyData.text" name="userid">
+                            </div>
+                            <div class="form-item">
+                                <label for="userid" class="mess-add-form-label">表情：</label>
+                                <span v-for="emo in emotions">
+                                    <input type="radio" name="emotion" :value="emo" v-model="replyData.emotion" />
+                                    <img class="emo-img" :src="'http://192.168.50.70:8081/images/emo/' + emo" />
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-footer"><button type="button" class="btn btn-sm btn-default"
+                                data-dismiss="collapse" @click="handleClose(re.id)">关闭
+                            </button>
+                            <button type="button" class="btn btn-sm btn-info" @click="to_submit(re.id)">
+                                提交
+                            </button></div>
+                    </div>
+<!--  -->
+
+                </div>
+
+                <div class="collapse" :id="'collapse' + reply.id">
+                    <div class="card card-body">
+                        <div class="form-item">
+                            <label for="userid" class="mess-add-form-label">内容：</label>
+                            <input type="text" required v-model="replyData.text" name="userid">
+                        </div>
+                        <div class="form-item">
+                            <label for="userid" class="mess-add-form-label">表情：</label>
+                            <span v-for="emo in emotions">
+                                <input type="radio" name="emotion" :value="emo" v-model="replyData.emotion" />
+                                <img class="emo-img" :src="'http://192.168.50.70:8081/images/emo/' + emo" />
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-footer"><button type="button" class="btn btn-sm btn-default"
+                            data-dismiss="collapse" @click="handleClose(reply.id)">关闭
+                        </button>
+                        <button type="button" class="btn btn-sm btn-info" @click="to_submit(reply.id)">
+                            提交
+                        </button></div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+    <script>
+        let app = Vue.createApp({
+            data() {
+                return {
+                    messageid: '',
+                    username: '',
+                    login: '',
+                    url: "http://192.168.50.70:8081/messagebook/messagebook/",
+                    current: {},
+                    replyData: {
+                        messageid: '',
+                        userid: '',
+                        pid: 0,
+                        text: '',
+                        emotion: ''
+                    },
+                    emotions: '',
+                    replies: {
+                        list: [],
+                        children: [],
+                        data: []
+                    },
+                }
+            },
+            methods: {
+                init() {
+                    this.messageid = JSON.parse(sessionStorage.getItem('messageid'))
+                    this.login = JSON.parse(sessionStorage.getItem('userinfo'))
+                    const _this = this;
+                    axios({
+                        url: this.url + "list/" + this.messageid,
+                        method: "GET",
+                    }).then(data => {
+                        if (data.data.code == 0) {
+                            this.current = data.data.data;
+                        }
+                    }).then(
+                        function () {
+                            axios({
+                                url: "http://192.168.50.70:8081/messagebook/userinfo/find/" + _this
+                                    .current.userid,
+                                method: 'GET',
+                            }).then(data => {
+                                _this.username = data.data.data;
+                            })
+                        }
+                    )
+                },
+                handleClose(id) {
+                    let idName = "#collapse";
+                    if (id) {
+                        idName += id;
+                    }
+                    $(idName).collapse('hide')
+                },
+                to_submit(id) {
+                    let idName = "#collapse";
+                    if (id) {
+                        idName += id;
+                    }
+                    $(idName).collapse('hide')
+                    console.log(this.replyData);
+                    this.replyData.userid = this.login.userid;
+                    this.replyData.messageid = this.messageid;
+                    axios({
+                        url: "http://192.168.50.70:8081/messagebook/reply/save",
+                        method: 'POST',
+                        data: JSON.stringify(this.replyData),
+                        headers: {
+                            'Content-Type': 'application/json;charset=UTF-8'
+                        },
+                    }).then(data => {
+                        if (data.data.code == 0) {
+                            this.replyData = {}
+                            this.getReplyData()
+                        }
+                    })
+
+                },
+                messReply(id) {
+                    if (id) {
+                        this.replyData.pid = id;
+                    } else {
+                        this.replyData.pid = 0;
+                    }
+                    // this.pUsername = name;
+                    axios({
+                        url: this.url + "/data",
+                        method: "get",
+                    }).then(data => {
+                        if (data.data.code == 0) {
+                            this.emotions = data.data.data.emotions;
+                        }
+                    })
+                },
+                badge() {
+                    switch (this.current.plate) {
+                        case '抒发情绪':
+                            return 'badge badge-primary';
+                        case '吐槽':
+                            return ' badge badge-secondary';
+                        case '紧急事件':
+                            return 'badge badge-danger';
+                        case '问题反馈':
+                            return 'badge badge-warning';
+                        default:
+                            return 'badge badge-dark'
+                    }
+                },
+                getReplyData() {
+                    axios({
+                        url: "http://192.168.50.70:8081/messagebook/reply/list/" + this.messageid,
+                        methos: "GET",
+                    }).then(data => {
+                        this.replies.list = data.data.data;
+                        this.formatterData()
+                        console.log(this.replies.data);
+                    })
+                },
+                formatterData() {
+                    const arr = this.replies.list;
+                    for (let i = 0; i < arr.length; i++) {
+                        if (arr[i].pid == 0) {
+                            arr[i].children = this.getChildren(arr[i].id)
+                            this.replies.data.push(arr[i])
+                        } 
+                    }
+                },
+                getChildren(id) {
+                    const arr = this.replies.list;
+                    let ch = []
+                    for (let i = 0; i < arr.length; i++) {
+                        if (arr[i].pid == id) {
+                            ch.push(arr[i])
+                            let c = this.getChildren(arr[i].id);
+                            for (let j = 0; j < c.length; j ++) {
+                                ch.push(c[j])
+                            }
+                        }
+                    }
+                    return ch;
+                }
+            },
+            mounted() {
+                this.init()
+                this.getReplyData()
+            }
+
+        });
+        app.mount("#app")
+    </script>
+
+</body>
+
+</html>

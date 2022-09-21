@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/vue3.js"></script>
+    <script src="js/axios.min.js"></script>
+    <script src="js/jquery-3.6.1.js"></script>
+  </head>
+  <body>
+    <section class="p-5"></section>
+    <div id="app">
+        <section class="p-5">
+            <div class="container">
+                <div class="row my-3">
+                    <div class="col-4"></div>
+                    <div class="col-4 border border-2 rounded-3 shadow p-3 mb-5 bg-body rounded">
+                        <div class="p-5">
+                            <h1 class="text-center">Register</h1>
+                        </div>
+                        <div class="form-floating mb-3 mt-3">
+                            <input type="text" class="form-control  mydata" @blur="insert($event)" v-model="username" id="floatingInput" placeholder="Username">
+                            <label for="floatingInput">Username</label>
+                        </div>
+                        <div class="form-floating mb-3 ">
+                            <input type="password" class="form-control  mydata" @blur="insert($event)" v-model="password" id="floatingPassword" placeholder="Password">
+                            <label for="floatingPassword">Password</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" v-model="sex" value="1">
+                              <label class="form-check-label" for="inlineRadio1">Male</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" v-model="sex" value="0">
+                              <label class="form-check-label" for="inlineRadio2">Female</label>
+                            </div>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control  mydata" @blur="insert($event)" v-model="mobile" id="floatingMobile" placeholder="Password">
+                            <label for="floatingMobile">Mobile</label>
+                        </div>
+                        <div class="d-grid gap-2 mt-5 col-6 mx-auto">
+                            <button id="xh_register_btn" type="button" @click="getData()" class="btn btn-primary btn-lg" disabled>Register</button>
+                        </div>
+                        <div class="p-5 text-center">
+                          <a href="login.html" class="link-info">Go Login</a>
+                        </div>
+                    </div>
+                    <div class="col-4"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <script>
+      const { createApp } = Vue;
+
+      createApp({
+        data() {
+          return {
+            message: "登录",
+            username: '',
+            password: '',
+            mobile:'',
+            sex:1
+          };
+        },
+        methods: {
+          insert(e) {
+            if (!e.target.value.trim()) {
+              this.changeBtndisable();
+            } else {
+              this.changeBtnable();
+            }
+          },
+          changeBtndisable() {
+            $("#xh_register_btn").attr("disabled", "true");
+          },
+          changeBtnable() {
+            if (!(this.isEmpty() === false)) {
+              $("#xh_register_btn").removeAttr("disabled");
+            }
+          },
+          isEmpty() {
+            var flag = true;
+            $(".mydata").each(function (i, item) {
+              if (!item.value.trim()) {
+                flag = false;
+                return false;
+              }
+            });
+            return flag;
+          },
+            getData(){
+                axios({
+                    method:"POST",
+                    url:'http://192.168.50.171:80/messagebook/userinfo/save',
+                    data:{
+                      "username":this.username,
+                      "password":this.password,
+                      "sex":this.sex,
+                      "mobile":this.mobile
+                    },
+                    headers:{
+                      "Content-Type":"application/json;charset=UTF-8"
+                    }
+                }).then(resp => {
+                    console.log(resp);
+                }).catch(err => {
+                    console.log(err);
+                });
+            }
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>
